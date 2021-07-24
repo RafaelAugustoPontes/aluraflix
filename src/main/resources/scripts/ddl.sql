@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS video (
+   id serial PRIMARY KEY,
+   description VARCHAR (2000) NOT NULL,
+   url VARCHAR(2000) NOT NULL
+);
+

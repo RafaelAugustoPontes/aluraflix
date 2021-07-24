@@ -1,0 +1,38 @@
+version: '3.1'
+services:
+  database:
+    image: postgres
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+    ports:
+      - 5432:5432
+    volumes:
+      - C:/Docker/postgres-aluraflix:/var/lib/postgresql/data
+    networks:
+      - aluraflix
+
+  database_client:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: rafaelpontes13@hotmail.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_LISTEN_PORT: 5050
+    ports:
+      - 80:80
+      - 5050:5050
+    volumes:
+      - C:/Docker/pgadmin-aluraflix:/var/lib/pgadmin
+    networks:
+      - aluraflix
+    depends_on:
+      - database
+
+
+networks:
+  aluraflix:
+    driver: bridge
