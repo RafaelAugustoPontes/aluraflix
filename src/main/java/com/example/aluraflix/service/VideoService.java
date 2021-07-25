@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class VideoService implements VideoServiceSpec {
@@ -18,8 +19,8 @@ public class VideoService implements VideoServiceSpec {
         this.repository = repository;
     }
 
-    public List<Video> findAll() {
-        return repository.findAll();
+    public List<VideoRespGet> findAll() {
+        return repository.findAll().stream().map(VideoRespGet::new).collect(Collectors.toList());
     }
 
     @Override
@@ -31,6 +32,39 @@ public class VideoService implements VideoServiceSpec {
         var createdVideo = repository.save(video);
 
         return new VideoRespGet(createdVideo);
+    }
+
+    @Override
+    public VideoRespGet findById(Integer id) {
+        var video = repository.findById(id);
+        return video.map(VideoRespGet::new).orElse(null);
+    }
+
+    @Override
+    public VideoRespGet update(Integer id, VideoReqPost request) {
+        var optionalVideo = repository.findById(id);
+
+        if (optionalVideo.isEmpty())
+            return null;
+
+        var savedVideo = optionalVideo.get();
+        savedVideo.setUrl(request.getUrl());
+        savedVideo.setDescription(request.getDescription());
+
+        repository.save(savedVideo);
+
+        return new VideoRespGet(savedVideo);
+    }
+
+    @Override
+    public boolean delete(Integer id) {
+        var video = repository.findById(id);
+        if (video.isEmpty())
+            return false;
+
+        repository.deleteById(id);
+
+        return true;
     }
 
 

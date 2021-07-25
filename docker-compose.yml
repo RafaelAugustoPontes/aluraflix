@@ -32,6 +32,17 @@ services:
     depends_on:
       - database
 
+  jenkins:
+    image: jenkins/jenkins:lts-jdk11
+    container_name: jenkins
+    restart: always
+    ports:
+      - 7474:8080
+      - 50000:50000
+    volumes:
+      - C:/Docker/jenkins:/var/jenkins_home
+    networks:
+      - aluraflix
 
 networks:
   aluraflix:
