@@ -1,6 +1,6 @@
-package com.example.aluraflix.resource;
+package com.example.aluraflix.resource.entity;
 
-public class Error {
+public class ErrorRespGet {
 
     private String field;
     private String message;

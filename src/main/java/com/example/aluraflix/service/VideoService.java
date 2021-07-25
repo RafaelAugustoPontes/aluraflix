@@ -2,6 +2,8 @@ package com.example.aluraflix.service;
 
 import com.example.aluraflix.model.Video;
 import com.example.aluraflix.repository.VideoRepository;
+import com.example.aluraflix.resource.entity.VideoReqPost;
+import com.example.aluraflix.resource.entity.VideoRespGet;
 import com.example.aluraflix.spec.VideoServiceSpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,10 @@ public class VideoService implements VideoServiceSpec {
     }
 
     public List<VideoRespGet> findAll() {
-        return repository.findAll().stream().map(VideoRespGet::new).collect(Collectors.toList());
+        return repository.findAll()
+                .stream()
+                .map(VideoRespGet::new)
+                .collect(Collectors.toList());
     }
 
     @Override

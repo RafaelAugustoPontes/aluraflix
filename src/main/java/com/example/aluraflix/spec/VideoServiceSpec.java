@@ -1,7 +1,7 @@
 package com.example.aluraflix.spec;
 
-import com.example.aluraflix.service.VideoReqPost;
-import com.example.aluraflix.service.VideoRespGet;
+import com.example.aluraflix.resource.entity.VideoReqPost;
+import com.example.aluraflix.resource.entity.VideoRespGet;
 
 import java.util.List;
 

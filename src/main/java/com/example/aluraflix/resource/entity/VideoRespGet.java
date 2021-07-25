@@ -1,4 +1,4 @@
-package com.example.aluraflix.service;
+package com.example.aluraflix.resource.entity;
 
 import com.example.aluraflix.model.Video;
 

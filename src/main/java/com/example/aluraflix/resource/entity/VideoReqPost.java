@@ -1,4 +1,4 @@
-package com.example.aluraflix.service;
+package com.example.aluraflix.resource.entity;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

@@ -1,7 +1,7 @@
 package com.example.aluraflix.resource;
 
-import com.example.aluraflix.service.VideoReqPost;
-import com.example.aluraflix.service.VideoRespGet;
+import com.example.aluraflix.resource.entity.VideoReqPost;
+import com.example.aluraflix.resource.entity.VideoRespGet;
 import com.example.aluraflix.spec.VideoServiceSpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/videos")
 public class VideoController {
 
-    public VideoServiceSpec service;
+    private VideoServiceSpec service;
 
     @Autowired
     public VideoController(VideoServiceSpec service) {

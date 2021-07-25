@@ -1,6 +1,6 @@
 package com.example.aluraflix.config;
 
-import com.example.aluraflix.resource.Error;
+import com.example.aluraflix.resource.entity.ErrorRespGet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -21,10 +21,10 @@ public class ValidationErrorHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public List<Error> handle(MethodArgumentNotValidException exception) {
+    public List<ErrorRespGet> handle(MethodArgumentNotValidException exception) {
         var fieldErrors = exception.getBindingResult().getFieldErrors();
         return fieldErrors.stream().map(fieldError -> {
-            Error error = new Error();
+            ErrorRespGet error = new ErrorRespGet();
             error.setField(fieldError.getField());
 
             final var mensagem = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
