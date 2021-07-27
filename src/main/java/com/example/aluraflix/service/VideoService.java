@@ -2,9 +2,9 @@ package com.example.aluraflix.service;
 
 import com.example.aluraflix.model.Video;
 import com.example.aluraflix.repository.VideoRepository;
-import com.example.aluraflix.resource.entity.VideoReqPost;
-import com.example.aluraflix.resource.entity.VideoRespGet;
-import com.example.aluraflix.spec.VideoServiceSpec;
+import com.example.aluraflix.resource.video.VideoReqPost;
+import com.example.aluraflix.resource.video.VideoRespGet;
+import com.example.aluraflix.spec.CrudSpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class VideoService implements VideoServiceSpec {
+public class VideoService implements CrudSpec<VideoRespGet, VideoReqPost> {
 
-    private VideoRepository repository;
+    private final VideoRepository repository;
 
     @Autowired
     public VideoService(VideoRepository repository) {

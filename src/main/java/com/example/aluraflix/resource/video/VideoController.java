@@ -1,8 +1,6 @@
-package com.example.aluraflix.resource;
+package com.example.aluraflix.resource.video;
 
-import com.example.aluraflix.resource.entity.VideoReqPost;
-import com.example.aluraflix.resource.entity.VideoRespGet;
-import com.example.aluraflix.spec.VideoServiceSpec;
+import com.example.aluraflix.spec.CrudSpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +13,10 @@ import java.util.List;
 @RequestMapping("/videos")
 public class VideoController {
 
-    private VideoServiceSpec service;
+    private final CrudSpec<VideoRespGet, VideoReqPost> service;
 
     @Autowired
-    public VideoController(VideoServiceSpec service) {
+    public VideoController(CrudSpec<VideoRespGet, VideoReqPost> service) {
         this.service = service;
     }
 

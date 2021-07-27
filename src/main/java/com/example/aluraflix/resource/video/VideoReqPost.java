@@ -1,4 +1,4 @@
-package com.example.aluraflix.resource.entity;
+package com.example.aluraflix.resource.video;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
