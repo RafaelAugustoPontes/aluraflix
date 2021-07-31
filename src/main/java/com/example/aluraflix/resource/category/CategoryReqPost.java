@@ -4,10 +4,10 @@ import javax.validation.constraints.NotBlank;
 
 public class CategoryReqPost {
 
-    @NotBlank
+    @NotBlank(message = "Título - O campo é obrigatório")
     private String title;
 
-    @NotBlank
+    @NotBlank(message = "Cor - O campo é obrigatório")
     private String color;
 
     public String getTitle() {

@@ -1,15 +1,16 @@
 package com.example.aluraflix.resource.video;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 public class VideoReqPost {
 
-    @NotNull @NotEmpty
+    @NotBlank(message = "Descrição - O campo é obrigatório")
     private String description;
 
-    @NotNull @NotEmpty
+    @NotBlank(message = "URL - O campo é obrigatório")
     private String url;
+
+    private Integer idCategory;
 
     public String getDescription() {
         return description;
@@ -25,5 +26,13 @@ public class VideoReqPost {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Integer getIdCategory() {
+        return idCategory == null ? 1 : idCategory;
+    }
+
+    public void setIdCategory(Integer idCategory) {
+        this.idCategory = idCategory;
     }
 }

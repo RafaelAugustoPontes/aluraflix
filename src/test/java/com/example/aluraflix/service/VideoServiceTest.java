@@ -27,7 +27,7 @@ class VideoServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        videoService = new VideoService(repository);
+        videoService = new VideoService(repository, null);
     }
 
     @Test

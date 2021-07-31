@@ -1,6 +1,7 @@
 package com.example.aluraflix.service;
 
 import com.example.aluraflix.model.Video;
+import com.example.aluraflix.repository.CategoryRepository;
 import com.example.aluraflix.repository.VideoRepository;
 import com.example.aluraflix.resource.video.VideoReqPost;
 import com.example.aluraflix.resource.video.VideoRespGet;
@@ -15,10 +16,12 @@ import java.util.stream.Collectors;
 public class VideoService implements CrudSpec<VideoRespGet, VideoReqPost> {
 
     private final VideoRepository repository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
-    public VideoService(VideoRepository repository) {
+    public VideoService(VideoRepository repository, CategoryRepository categoryRepository) {
         this.repository = repository;
+        this.categoryRepository = categoryRepository;
     }
 
     public List<VideoRespGet> findAll() {
@@ -33,6 +36,7 @@ public class VideoService implements CrudSpec<VideoRespGet, VideoReqPost> {
         var video = new Video();
         video.setDescription(request.getDescription());
         video.setUrl(request.getUrl());
+
 
         var createdVideo = repository.save(video);
 

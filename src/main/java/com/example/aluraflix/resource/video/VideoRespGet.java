@@ -7,6 +7,7 @@ public class VideoRespGet {
     private Integer id;
     private String description;
     private String url;
+    
 
     public VideoRespGet(Video video) {
         this.id = video.getId();
