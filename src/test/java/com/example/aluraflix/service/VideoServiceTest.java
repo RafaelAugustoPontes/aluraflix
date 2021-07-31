@@ -2,9 +2,7 @@ package com.example.aluraflix.service;
 
 import com.example.aluraflix.model.Video;
 import com.example.aluraflix.repository.VideoRepository;
-import com.example.aluraflix.resource.video.VideoReqPost;
-import com.example.aluraflix.resource.video.VideoRespGet;
-import com.example.aluraflix.spec.CrudSpec;
+import com.example.aluraflix.spec.VideoSpec;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 class VideoServiceTest {
 
-    private CrudSpec<VideoRespGet, VideoReqPost> videoService;
+    private VideoSpec videoService;
 
     @Mock
     private VideoRepository repository;

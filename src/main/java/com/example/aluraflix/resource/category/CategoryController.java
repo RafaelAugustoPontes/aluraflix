@@ -1,6 +1,7 @@
 package com.example.aluraflix.resource.category;
 
-import com.example.aluraflix.spec.CrudSpec;
+import com.example.aluraflix.resource.video.VideoRespGet;
+import com.example.aluraflix.spec.CategorySpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +14,10 @@ import java.util.List;
 @RequestMapping("/categories")
 public class CategoryController {
 
-    private final CrudSpec<CategoryRespGet, CategoryReqPost> service;
+    private final CategorySpec service;
 
     @Autowired
-    public CategoryController(CrudSpec<CategoryRespGet, CategoryReqPost> service) {
+    public CategoryController(CategorySpec service) {
         this.service = service;
     }
 
@@ -35,6 +36,16 @@ public class CategoryController {
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(category);
+    }
+
+    @GetMapping("/{id}/videos")
+    public ResponseEntity<List<VideoRespGet>> findVideosByIdCategory(@PathVariable Integer id) {
+        var videos = service.findCategoryVideos(id);
+
+        if (videos == null)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(videos);
     }
 
     @PostMapping

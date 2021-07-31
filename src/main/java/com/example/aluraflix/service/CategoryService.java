@@ -2,9 +2,11 @@ package com.example.aluraflix.service;
 
 import com.example.aluraflix.model.Category;
 import com.example.aluraflix.repository.CategoryRepository;
+import com.example.aluraflix.repository.VideoRepository;
 import com.example.aluraflix.resource.category.CategoryReqPost;
 import com.example.aluraflix.resource.category.CategoryRespGet;
-import com.example.aluraflix.spec.CrudSpec;
+import com.example.aluraflix.resource.video.VideoRespGet;
+import com.example.aluraflix.spec.CategorySpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,13 +14,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class CategoryService implements CrudSpec<CategoryRespGet, CategoryReqPost> {
+public class CategoryService implements CategorySpec {
 
     private final CategoryRepository repository;
+    private final VideoRepository videoRepository;
 
     @Autowired
-    public CategoryService(final CategoryRepository repository) {
+    public CategoryService(final CategoryRepository repository, final VideoRepository videoRepository) {
         this.repository = repository;
+        this.videoRepository = videoRepository;
     }
 
     @Override
@@ -77,6 +81,18 @@ public class CategoryService implements CrudSpec<CategoryRespGet, CategoryReqPos
         repository.deleteById(id);
 
         return true;
+    }
+
+    @Override
+    public List<VideoRespGet> findCategoryVideos(Integer id) {
+        var videos = videoRepository.findByCategoryId(id);
+
+        if (videos.isEmpty())
+            return null;
+
+        return videos.stream()
+                .map(VideoRespGet::new)
+                .collect(Collectors.toList());
     }
 
 }

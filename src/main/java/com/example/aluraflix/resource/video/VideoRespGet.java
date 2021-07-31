@@ -7,12 +7,16 @@ public class VideoRespGet {
     private Integer id;
     private String description;
     private String url;
-    
+    private Integer idCategory;
+    private String titleCategory;
+
 
     public VideoRespGet(Video video) {
         this.id = video.getId();
         this.description = video.getDescription();
         this.url = video.getUrl();
+        idCategory = video.getCategory().getId();
+        titleCategory = video.getCategory().getTitle();
     }
 
     public VideoRespGet() {
@@ -42,4 +46,21 @@ public class VideoRespGet {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    public Integer getIdCategory() {
+        return idCategory;
+    }
+
+    public void setIdCategory(Integer idCategory) {
+        this.idCategory = idCategory;
+    }
+
+    public String getTitleCategory() {
+        return titleCategory;
+    }
+
+    public void setTitleCategory(String titleCategory) {
+        this.titleCategory = titleCategory;
+    }
+
 }

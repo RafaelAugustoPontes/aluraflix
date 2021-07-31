@@ -5,7 +5,7 @@ import com.example.aluraflix.repository.CategoryRepository;
 import com.example.aluraflix.repository.VideoRepository;
 import com.example.aluraflix.resource.video.VideoReqPost;
 import com.example.aluraflix.resource.video.VideoRespGet;
-import com.example.aluraflix.spec.CrudSpec;
+import com.example.aluraflix.spec.VideoSpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class VideoService implements CrudSpec<VideoRespGet, VideoReqPost> {
+public class VideoService implements VideoSpec {
 
     private final VideoRepository repository;
     private final CategoryRepository categoryRepository;
