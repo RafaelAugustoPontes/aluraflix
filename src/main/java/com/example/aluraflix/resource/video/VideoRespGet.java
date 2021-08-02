@@ -1,7 +1,8 @@
 package com.example.aluraflix.resource.video;
 
-import com.example.aluraflix.model.Video;
+import lombok.Builder;
 
+@Builder
 public class VideoRespGet {
 
     private Integer id;
@@ -9,19 +10,6 @@ public class VideoRespGet {
     private String url;
     private Integer idCategory;
     private String titleCategory;
-
-
-    public VideoRespGet(Video video) {
-        this.id = video.getId();
-        this.description = video.getDescription();
-        this.url = video.getUrl();
-        idCategory = video.getCategory().getId();
-        titleCategory = video.getCategory().getTitle();
-    }
-
-    public VideoRespGet() {
-
-    }
 
     public Integer getId() {
         return id;
@@ -62,5 +50,4 @@ public class VideoRespGet {
     public void setTitleCategory(String titleCategory) {
         this.titleCategory = titleCategory;
     }
-
 }

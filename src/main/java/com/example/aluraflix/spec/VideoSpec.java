@@ -1,5 +1,6 @@
 package com.example.aluraflix.spec;
 
+import com.example.aluraflix.resource.entity.GenericResponse;
 import com.example.aluraflix.resource.video.VideoReqPost;
 import com.example.aluraflix.resource.video.VideoRespGet;
 
@@ -7,14 +8,14 @@ import java.util.List;
 
 public interface VideoSpec {
 
-    List<VideoRespGet> findAll();
+    GenericResponse<List<VideoRespGet>> findAll();
 
-    VideoRespGet create(VideoReqPost request);
+    GenericResponse<VideoRespGet> create(VideoReqPost request);
 
-    VideoRespGet findById(Integer id);
+    GenericResponse<VideoRespGet> findById(Integer id);
 
-    VideoRespGet update(Integer id, VideoReqPost request);
+    GenericResponse<VideoRespGet> update(Integer id, VideoReqPost request);
 
-    boolean delete(Integer id);
+    GenericResponse<VideoRespGet> delete(Integer id);
 
 }

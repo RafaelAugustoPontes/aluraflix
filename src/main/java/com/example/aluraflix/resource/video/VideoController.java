@@ -4,7 +4,6 @@ import com.example.aluraflix.spec.VideoSpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -22,41 +21,28 @@ public class VideoController {
 
     @GetMapping
     public ResponseEntity<List<VideoRespGet>> findAll() {
-        var videos = service.findAll();
-
-        return ResponseEntity.ok(videos);
+        return service.findAll().generate();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<VideoRespGet> findById(@PathVariable Integer id) {
-        var video = service.findById(id);
-
-        if (video == null)
-            return ResponseEntity.notFound().build();
-
-        return ResponseEntity.ok(video);
+        return service.findById(id).generate();
     }
 
     @PostMapping
-    public ResponseEntity<VideoRespGet> create(@Valid @RequestBody VideoReqPost request, UriComponentsBuilder uriComponentsBuilder) {
-        var videoRespGet = service.create(request);
-        var uri = uriComponentsBuilder.path("/videos/{id}").buildAndExpand(videoRespGet.getId()).toUri();
-
-        return ResponseEntity.created(uri).body(videoRespGet);
+    public ResponseEntity<VideoRespGet> create(@Valid @RequestBody VideoReqPost request) {
+        var genericResponse = service.create(request);
+        return genericResponse.generate();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<VideoRespGet> update(@PathVariable Integer id, @Valid @RequestBody VideoReqPost request) {
-        var videoRespGet = service.update(id, request);
-
-        return ResponseEntity.ok().body(videoRespGet);
+        return service.update(id, request).generate();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<VideoRespGet> delete(@PathVariable Integer id) {
-        if (service.delete(id))
-            return ResponseEntity.noContent().build();
-        return ResponseEntity.notFound().build();
+        return service.delete(id).generate();
     }
 
 }

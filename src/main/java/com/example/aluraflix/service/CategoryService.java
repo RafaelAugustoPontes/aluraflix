@@ -1,6 +1,7 @@
 package com.example.aluraflix.service;
 
 import com.example.aluraflix.model.Category;
+import com.example.aluraflix.model.Video;
 import com.example.aluraflix.repository.CategoryRepository;
 import com.example.aluraflix.repository.VideoRepository;
 import com.example.aluraflix.resource.category.CategoryReqPost;
@@ -91,8 +92,19 @@ public class CategoryService implements CategorySpec {
             return null;
 
         return videos.stream()
-                .map(VideoRespGet::new)
+                .map(this::getVideoRespGet)
                 .collect(Collectors.toList());
     }
+
+    private VideoRespGet getVideoRespGet(Video createdVideo) {
+        return VideoRespGet.builder()
+                .id(createdVideo.getId())
+                .description(createdVideo.getDescription())
+                .url(createdVideo.getUrl())
+                .idCategory(createdVideo.getCategory().getId())
+                .titleCategory(createdVideo.getCategory().getTitle())
+                .build();
+    }
+
 
 }

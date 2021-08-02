@@ -1,10 +1,17 @@
 package com.example.aluraflix.model;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 
 
 @Entity
 @Table(name = "video")
+@Getter
+@Setter
 public class Video {
 
     @Id
@@ -17,37 +24,7 @@ public class Video {
 
     @ManyToOne
     @JoinColumn(name = "category_id")
+    @Fetch(FetchMode.JOIN)
     private Category category;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
 }

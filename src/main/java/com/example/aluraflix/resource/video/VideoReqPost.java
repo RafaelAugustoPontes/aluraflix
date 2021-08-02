@@ -1,5 +1,8 @@
 package com.example.aluraflix.resource.video;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.validation.constraints.NotBlank;
 
 public class VideoReqPost {
@@ -29,7 +32,7 @@ public class VideoReqPost {
     }
 
     public Integer getIdCategory() {
-        return idCategory == null ? 1 : idCategory;
+        return idCategory;
     }
 
     public void setIdCategory(Integer idCategory) {

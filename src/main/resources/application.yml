@@ -7,3 +7,9 @@ spring:
     url: jdbc:postgresql://localhost:5432/aluraflix
     username: admin
     password: admin
+
+---
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:postgresql://localhost:5432/aluraflix-test

@@ -21,3 +21,4 @@ REFERENCES category (id);
 
 INSERT INTO category (id, title, color) VALUES (1, 'LIVRE', 'black');
 
+ALTER TABLE video ALTER COLUMN category_id SET NOT NULL;
