@@ -20,8 +20,8 @@ public class VideoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<VideoRespGet>> findAll() {
-        return service.findAll().generate();
+    public ResponseEntity<List<VideoRespGet>> findAll(@RequestParam(required = false) String description) {
+        return service.find(description).generate();
     }
 
     @GetMapping("/{id}")

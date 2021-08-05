@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface VideoSpec {
 
-    GenericResponse<List<VideoRespGet>> findAll();
+    GenericResponse<List<VideoRespGet>> find(String description);
 
     GenericResponse<VideoRespGet> create(VideoReqPost request);
 

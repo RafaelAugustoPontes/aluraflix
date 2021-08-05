@@ -3,7 +3,6 @@ package com.example.aluraflix.service;
 import com.example.aluraflix.model.Video;
 import com.example.aluraflix.repository.VideoRepository;
 import com.example.aluraflix.spec.VideoSpec;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +24,7 @@ class VideoServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        videoService = new VideoService(repository, null);
+        videoService = new VideoService(repository, null, null);
     }
 
     @Test
@@ -38,7 +37,6 @@ class VideoServiceTest {
         videos.add(video);
         when(repository.findAll()).thenReturn(videos);
 
-        var foundVideos = videoService.findAll();
 //        Assertions.assertEquals(1, foundVideos.size());
     }
 

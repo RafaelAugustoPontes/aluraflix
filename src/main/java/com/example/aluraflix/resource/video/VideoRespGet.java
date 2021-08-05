@@ -1,15 +1,19 @@
 package com.example.aluraflix.resource.video;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class VideoRespGet {
 
     private Integer id;
     private String description;
     private String url;
-    private Integer idCategory;
-    private String titleCategory;
+    private Integer categoryId;
+    private String categoryTitle;
 
     public Integer getId() {
         return id;
@@ -35,19 +39,20 @@ public class VideoRespGet {
         this.url = url;
     }
 
-    public Integer getIdCategory() {
-        return idCategory;
+    public Integer getCategoryId() {
+        return categoryId;
     }
 
-    public void setIdCategory(Integer idCategory) {
-        this.idCategory = idCategory;
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public String getTitleCategory() {
-        return titleCategory;
+    public String getCategoryTitle() {
+        return categoryTitle;
     }
 
-    public void setTitleCategory(String titleCategory) {
-        this.titleCategory = titleCategory;
+    public void setCategoryTitle(String categoryTitle) {
+        this.categoryTitle = categoryTitle;
     }
+
 }

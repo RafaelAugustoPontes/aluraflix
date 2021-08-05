@@ -8,6 +8,8 @@ import com.example.aluraflix.resource.video.VideoReqPost;
 import com.example.aluraflix.resource.video.VideoRespGet;
 import com.example.aluraflix.spec.VideoSpec;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,18 +23,25 @@ public class VideoService implements VideoSpec {
 
     private final VideoRepository repository;
     private final CategoryRepository categoryRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public VideoService(VideoRepository repository, CategoryRepository categoryRepository) {
+    public VideoService(VideoRepository repository, CategoryRepository categoryRepository, ModelMapper modelMapper) {
         this.repository = repository;
         this.categoryRepository = categoryRepository;
+        this.modelMapper = modelMapper;
     }
 
-    public GenericResponse<List<VideoRespGet>> findAll() {
+    public GenericResponse<List<VideoRespGet>> find(String description) {
         try {
-            final var respGetList = repository.findAll()
-                    .stream()
-                    .map(this::getVideoRespGet)
+            List<Video> videos;
+            if (StringUtils.isBlank(description))
+                videos = repository.findAll();
+            else
+                videos = repository.findByDescriptionContainingIgnoreCase(description);
+
+            List<VideoRespGet> respGetList = videos.stream()
+                    .map(source -> modelMapper.map(source, VideoRespGet.class))
                     .collect(Collectors.toList());
 
             return GenericResponse.<List<VideoRespGet>>builder()
@@ -52,20 +61,16 @@ public class VideoService implements VideoSpec {
     @Transactional
     public GenericResponse<VideoRespGet> create(VideoReqPost request) {
         try {
-            var video = new Video();
-            video.setDescription(request.getDescription());
-            video.setUrl(request.getUrl());
+            var video = modelMapper.map(request, Video.class);
             final var idCategory = request.getIdCategory() == null ? Integer.valueOf(1) : request.getIdCategory();
             video.setCategory(categoryRepository.findById(idCategory).orElseThrow());
-
             var createdVideo = repository.save(video);
-            VideoRespGet resp = getVideoRespGet(createdVideo);
+            var resp = modelMapper.map(createdVideo, VideoRespGet.class);
 
             return GenericResponse.<VideoRespGet>builder()
                     .isCreated(true)
                     .object(resp)
                     .build();
-
         } catch (Exception e) {
             log.debug("Erro ao criar o vídeo");
             e.printStackTrace();
@@ -87,9 +92,8 @@ public class VideoService implements VideoSpec {
 
             return GenericResponse.<VideoRespGet>builder()
                     .isOk(true)
-                    .object(getVideoRespGet(optionalVideo.get()))
+                    .object(modelMapper.map(optionalVideo.get(), VideoRespGet.class))
                     .build();
-
         } catch (Exception e) {
             log.debug("Erro ao buscar o vídeo id {}", id);
             e.printStackTrace();
@@ -118,9 +122,8 @@ public class VideoService implements VideoSpec {
 
             return GenericResponse.<VideoRespGet>builder()
                     .isOk(true)
-                    .object(getVideoRespGet(savedVideo))
+                    .object(modelMapper.map(optionalVideo.get(), VideoRespGet.class))
                     .build();
-
         } catch (Exception e) {
             log.debug("Erro ao atualizar o vídeo id {}", id);
             e.printStackTrace();
@@ -140,7 +143,6 @@ public class VideoService implements VideoSpec {
                         .build();
 
             repository.deleteById(id);
-
             return GenericResponse.<VideoRespGet>builder()
                     .isOk(true)
                     .build();
@@ -152,16 +154,5 @@ public class VideoService implements VideoSpec {
                     .build();
         }
     }
-
-    private VideoRespGet getVideoRespGet(Video createdVideo) {
-        return VideoRespGet.builder()
-                .id(createdVideo.getId())
-                .description(createdVideo.getDescription())
-                .url(createdVideo.getUrl())
-                .idCategory(createdVideo.getCategory().getId())
-                .titleCategory(createdVideo.getCategory().getTitle())
-                .build();
-    }
-
 
 }

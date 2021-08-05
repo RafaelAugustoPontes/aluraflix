@@ -11,4 +11,6 @@ public interface VideoRepository extends JpaRepository<Video, Integer> {
 
     List<Video> findByCategoryId(Integer id);
 
+    List<Video> findByDescriptionContainingIgnoreCase(String description);
+
 }

@@ -101,8 +101,8 @@ public class CategoryService implements CategorySpec {
                 .id(createdVideo.getId())
                 .description(createdVideo.getDescription())
                 .url(createdVideo.getUrl())
-                .idCategory(createdVideo.getCategory().getId())
-                .titleCategory(createdVideo.getCategory().getTitle())
+                .categoryId(createdVideo.getCategory().getId())
+                .categoryTitle(createdVideo.getCategory().getTitle())
                 .build();
     }
 
