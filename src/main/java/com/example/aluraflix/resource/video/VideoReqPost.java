@@ -1,8 +1,5 @@
 package com.example.aluraflix.resource.video;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import javax.validation.constraints.NotBlank;
 
 public class VideoReqPost {
@@ -13,7 +10,7 @@ public class VideoReqPost {
     @NotBlank(message = "URL - O campo é obrigatório")
     private String url;
 
-    private Integer idCategory;
+    private Integer categoryId;
 
     public String getDescription() {
         return description;
@@ -31,11 +28,12 @@ public class VideoReqPost {
         this.url = url;
     }
 
-    public Integer getIdCategory() {
-        return idCategory;
+    public Integer getCategoryId() {
+        return categoryId;
     }
 
-    public void setIdCategory(Integer idCategory) {
-        this.idCategory = idCategory;
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
+
 }

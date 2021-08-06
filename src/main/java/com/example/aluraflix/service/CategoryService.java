@@ -1,13 +1,14 @@
 package com.example.aluraflix.service;
 
 import com.example.aluraflix.model.Category;
-import com.example.aluraflix.model.Video;
 import com.example.aluraflix.repository.CategoryRepository;
 import com.example.aluraflix.repository.VideoRepository;
 import com.example.aluraflix.resource.category.CategoryReqPost;
 import com.example.aluraflix.resource.category.CategoryRespGet;
-import com.example.aluraflix.resource.video.VideoRespGet;
+import com.example.aluraflix.resource.entity.GenericResponse;
 import com.example.aluraflix.spec.CategorySpec;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,96 +16,128 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class CategoryService implements CategorySpec {
 
     private final CategoryRepository repository;
     private final VideoRepository videoRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public CategoryService(final CategoryRepository repository, final VideoRepository videoRepository) {
+    public CategoryService(final CategoryRepository repository,
+                           final VideoRepository videoRepository,
+                           final ModelMapper modelMapper) {
         this.repository = repository;
         this.videoRepository = videoRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
-    public List<CategoryRespGet> findAll() {
-        return repository.findAll()
-                .stream()
-                .map(CategoryRespGet::new)
-                .collect(Collectors.toList());
+    public GenericResponse<List<CategoryRespGet>> findAll() {
+        try {
+            var respGets = repository.findAll()
+                    .stream()
+                    .map(source -> modelMapper.map(source, CategoryRespGet.class))
+                    .collect(Collectors.toList());
+
+            return GenericResponse.<List<CategoryRespGet>>builder()
+                    .isOk(true)
+                    .object(respGets)
+                    .build();
+        } catch (Exception e) {
+            log.debug("Erro ao buscar as categorias");
+            e.printStackTrace();
+            return GenericResponse.<List<CategoryRespGet>>builder()
+                    .isInternalError(true)
+                    .build();
+        }
     }
 
     @Override
-    public CategoryRespGet create(CategoryReqPost request) {
-        var category = new Category();
-        category.setTitle(request.getTitle());
-        category.setColor(request.getColor());
-
-        repository.save(category);
-
-        return new CategoryRespGet(category);
+    public GenericResponse<CategoryRespGet> create(CategoryReqPost request) {
+        try {
+            var category = modelMapper.map(request, Category.class);
+            repository.save(category);
+            var categoryRespGet = modelMapper.map(category, CategoryRespGet.class);
+            return GenericResponse.<CategoryRespGet>builder()
+                    .isCreated(true)
+                    .object(categoryRespGet)
+                    .build();
+        } catch (Exception e) {
+            log.debug("Erro ao criar categoria");
+            e.printStackTrace();
+            return GenericResponse.<CategoryRespGet>builder()
+                    .isInternalError(true)
+                    .build();
+        }
     }
 
     @Override
-    public CategoryRespGet findById(Integer id) {
+    public GenericResponse<CategoryRespGet> findById(Integer id) {
         var categoryOptional = repository.findById(id);
 
         if (categoryOptional.isEmpty())
-            return null;
+            return GenericResponse.<CategoryRespGet>builder()
+                    .isNotFound(true)
+                    .build();
 
-        return new CategoryRespGet(categoryOptional.get());
-    }
-
-    @Override
-    public CategoryRespGet update(Integer id, CategoryReqPost request) {
-        var optional = repository.findById(id);
-
-        if (optional.isEmpty())
-            return null;
-
-        var savedCategory = optional.get();
-
-        savedCategory.setTitle(request.getTitle());
-        savedCategory.setColor(request.getColor());
-
-        repository.save(savedCategory);
-
-        return new CategoryRespGet(savedCategory);
-    }
-
-    @Override
-    public boolean delete(Integer id) {
-        var categoryOptional = repository.findById(id);
-
-        if (categoryOptional.isEmpty())
-            return false;
-
-        repository.deleteById(id);
-
-        return true;
-    }
-
-    @Override
-    public List<VideoRespGet> findCategoryVideos(Integer id) {
-        var videos = videoRepository.findByCategoryId(id);
-
-        if (videos.isEmpty())
-            return null;
-
-        return videos.stream()
-                .map(this::getVideoRespGet)
-                .collect(Collectors.toList());
-    }
-
-    private VideoRespGet getVideoRespGet(Video createdVideo) {
-        return VideoRespGet.builder()
-                .id(createdVideo.getId())
-                .description(createdVideo.getDescription())
-                .url(createdVideo.getUrl())
-                .categoryId(createdVideo.getCategory().getId())
-                .categoryTitle(createdVideo.getCategory().getTitle())
+        return GenericResponse.<CategoryRespGet>builder()
+                .isOk(true)
+                .object(modelMapper.map(categoryOptional.get(), CategoryRespGet.class))
                 .build();
     }
 
+    @Override
+    public GenericResponse<CategoryRespGet> update(Integer id, CategoryReqPost request) {
+        try {
+            var optional = repository.findById(id);
+            if (optional.isEmpty())
+                return GenericResponse.<CategoryRespGet>builder()
+                        .isNotFound(true)
+                        .build();
+
+            var savedCategory = optional.get();
+            savedCategory.setTitle(request.getTitle());
+            savedCategory.setColor(request.getColor());
+            repository.save(savedCategory);
+
+            return GenericResponse.<CategoryRespGet>builder()
+                    .isOk(true)
+                    .object(modelMapper.map(savedCategory, CategoryRespGet.class))
+                    .build();
+        } catch (Exception e) {
+            log.debug("Erro ao excluir a categoria id {}", id);
+            e.printStackTrace();
+            return GenericResponse.<CategoryRespGet>builder()
+                    .isInternalError(true)
+                    .build();
+        }
+
+    }
+
+    @Override
+    public GenericResponse<CategoryRespGet> delete(Integer id) {
+        try {
+            var categoryOptional = repository.findById(id);
+
+            if (categoryOptional.isEmpty())
+                return GenericResponse.<CategoryRespGet>builder()
+                        .isNotFound(true)
+                        .build();
+
+            repository.deleteById(id);
+
+            return GenericResponse.<CategoryRespGet>builder()
+                    .isOk(true)
+                    .build();
+
+        } catch (Exception e) {
+            log.debug("Erro ao excluir a categoria id {}", id);
+            e.printStackTrace();
+            return GenericResponse.<CategoryRespGet>builder()
+                    .isInternalError(true)
+                    .build();
+        }
+    }
 
 }

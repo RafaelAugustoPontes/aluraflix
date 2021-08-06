@@ -1,16 +1,18 @@
 package com.example.aluraflix.repository;
 
 import com.example.aluraflix.model.Video;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface VideoRepository extends JpaRepository<Video, Integer> {
+public interface VideoRepository extends PagingAndSortingRepository<Video, Integer> {
 
     List<Video> findByCategoryId(Integer id);
 
-    List<Video> findByDescriptionContainingIgnoreCase(String description);
+    Page<Video> findByDescriptionContainingIgnoreCase(String description, Pageable pageable);
 
 }

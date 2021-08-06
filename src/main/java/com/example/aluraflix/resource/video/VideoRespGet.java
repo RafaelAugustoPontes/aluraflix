@@ -1,13 +1,8 @@
 package com.example.aluraflix.resource.video;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import com.example.aluraflix.resource.entity.ResponseContent;
 
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class VideoRespGet {
+public class VideoRespGet implements ResponseContent {
 
     private Integer id;
     private String description;

@@ -1,22 +1,12 @@
 package com.example.aluraflix.resource.category;
 
-import com.example.aluraflix.model.Category;
+import com.example.aluraflix.resource.entity.ResponseContent;
 
-public class CategoryRespGet {
+public class CategoryRespGet implements ResponseContent {
 
     private Integer id;
     private String title;
     private String color;
-
-    public CategoryRespGet(Category category) {
-        this.id = category.getId();
-        this.title = category.getTitle();
-        this.color = category.getColor();
-    }
-
-    public CategoryRespGet() {
-
-    }
 
     public Integer getId() {
         return id;

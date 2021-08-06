@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -26,32 +28,34 @@ public class VideoService implements VideoSpec {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public VideoService(VideoRepository repository, CategoryRepository categoryRepository, ModelMapper modelMapper) {
+    public VideoService(final VideoRepository repository,
+                        final CategoryRepository categoryRepository,
+                        final ModelMapper modelMapper) {
         this.repository = repository;
         this.categoryRepository = categoryRepository;
         this.modelMapper = modelMapper;
     }
 
-    public GenericResponse<List<VideoRespGet>> find(String description) {
+    @Override
+    public GenericResponse<Page<VideoRespGet>> find(String description, Pageable page) {
         try {
-            List<Video> videos;
+            Page<Video> videoPage;
             if (StringUtils.isBlank(description))
-                videos = repository.findAll();
+                videoPage = repository.findAll(page);
             else
-                videos = repository.findByDescriptionContainingIgnoreCase(description);
+                videoPage = repository.findByDescriptionContainingIgnoreCase(description, page);
 
-            List<VideoRespGet> respGetList = videos.stream()
-                    .map(source -> modelMapper.map(source, VideoRespGet.class))
-                    .collect(Collectors.toList());
+            Page<VideoRespGet> respGetList = videoPage.map(video -> modelMapper.map(video, VideoRespGet.class));
 
-            return GenericResponse.<List<VideoRespGet>>builder()
+
+            return GenericResponse.<Page<VideoRespGet>>builder()
                     .isOk(true)
                     .object(respGetList)
                     .build();
         } catch (Exception e) {
             log.debug("Erro ao buscar os videos");
             e.printStackTrace();
-            return GenericResponse.<List<VideoRespGet>>builder()
+            return GenericResponse.<Page<VideoRespGet>>builder()
                     .isInternalError(true)
                     .build();
         }
@@ -62,7 +66,7 @@ public class VideoService implements VideoSpec {
     public GenericResponse<VideoRespGet> create(VideoReqPost request) {
         try {
             var video = modelMapper.map(request, Video.class);
-            final var idCategory = request.getIdCategory() == null ? Integer.valueOf(1) : request.getIdCategory();
+            final var idCategory = request.getCategoryId() == null ? Integer.valueOf(1) : request.getCategoryId();
             video.setCategory(categoryRepository.findById(idCategory).orElseThrow());
             var createdVideo = repository.save(video);
             var resp = modelMapper.map(createdVideo, VideoRespGet.class);
@@ -117,7 +121,6 @@ public class VideoService implements VideoSpec {
             var savedVideo = optionalVideo.get();
             savedVideo.setUrl(request.getUrl());
             savedVideo.setDescription(request.getDescription());
-
             repository.save(savedVideo);
 
             return GenericResponse.<VideoRespGet>builder()
@@ -153,6 +156,25 @@ public class VideoService implements VideoSpec {
                     .isInternalError(true)
                     .build();
         }
+    }
+
+    @Override
+    public GenericResponse<List<VideoRespGet>> findVideosByCategoryId(Integer id) {
+        var videos = repository.findByCategoryId(id);
+
+        if (videos.isEmpty())
+            return GenericResponse.<List<VideoRespGet>>builder()
+                    .isNotFound(true)
+                    .build();
+
+        var respGets = videos.stream()
+                .map(source -> modelMapper.map(source, VideoRespGet.class))
+                .collect(Collectors.toList());
+
+        return GenericResponse.<List<VideoRespGet>>builder()
+                .isOk(true)
+                .object(respGets)
+                .build();
     }
 
 }
