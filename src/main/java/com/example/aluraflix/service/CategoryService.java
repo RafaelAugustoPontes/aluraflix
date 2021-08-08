@@ -10,17 +10,15 @@ import com.example.aluraflix.spec.CategorySpec;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class CategoryService implements CategorySpec {
 
     private final CategoryRepository repository;
-    private final VideoRepository videoRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
@@ -28,26 +26,23 @@ public class CategoryService implements CategorySpec {
                            final VideoRepository videoRepository,
                            final ModelMapper modelMapper) {
         this.repository = repository;
-        this.videoRepository = videoRepository;
         this.modelMapper = modelMapper;
     }
 
     @Override
-    public GenericResponse<List<CategoryRespGet>> findAll() {
+    public GenericResponse<Page<CategoryRespGet>> findAll(Pageable page) {
         try {
-            var respGets = repository.findAll()
-                    .stream()
-                    .map(source -> modelMapper.map(source, CategoryRespGet.class))
-                    .collect(Collectors.toList());
+            var respGets = repository.findAll(page)
+                    .map(source -> modelMapper.map(source, CategoryRespGet.class));
 
-            return GenericResponse.<List<CategoryRespGet>>builder()
+            return GenericResponse.<Page<CategoryRespGet>>builder()
                     .isOk(true)
                     .object(respGets)
                     .build();
         } catch (Exception e) {
             log.debug("Erro ao buscar as categorias");
             e.printStackTrace();
-            return GenericResponse.<List<CategoryRespGet>>builder()
+            return GenericResponse.<Page<CategoryRespGet>>builder()
                     .isInternalError(true)
                     .build();
         }

@@ -3,12 +3,12 @@ package com.example.aluraflix.spec;
 import com.example.aluraflix.resource.category.CategoryReqPost;
 import com.example.aluraflix.resource.category.CategoryRespGet;
 import com.example.aluraflix.resource.entity.GenericResponse;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface CategorySpec {
 
-    GenericResponse<List<CategoryRespGet>> findAll();
+    GenericResponse<Page<CategoryRespGet>> findAll(Pageable page);
 
     GenericResponse<CategoryRespGet> create(CategoryReqPost request);
 
