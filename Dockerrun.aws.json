@@ -1,0 +1,41 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "volumes": [
+    {
+      "name": "postgres-data",
+      "host": {
+        "sourcePath": "/data/db"
+      }
+    }
+  ],
+  "containerDefinitions": [
+    {
+      "name": "postgres",
+      "image": "postgres",
+      "essential": "true",
+      "environment": [
+        {
+          "name": "POSTGRES_USER",
+          "value": "admin"
+        },
+        {
+          "name": "POSTGRES_PASSWORD",
+          "value": "admin"
+        }
+      ],
+      "memory": 128,
+      "mountPoints": [
+        {
+          "sourceVolume": "postgres-data",
+          "containerPath": "/var/lib/postgresql/data"
+        }
+      ],
+      "portMappings": [
+        {
+          "hostPort": 5432,
+          "containerPort": 5432
+        }
+      ]
+    }
+  ]
+}

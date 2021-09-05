@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/videos")
@@ -27,6 +28,11 @@ public class VideoController {
                                                       @PageableDefault(sort = "id", direction = Sort.Direction.DESC, size = 5) Pageable page
     ) {
         return service.find(description, page).generate();
+    }
+
+    @GetMapping("/free")
+    public ResponseEntity<List<VideoRespGet>> findFreeVideos() {
+        return service.findFree().generate();
     }
 
     @GetMapping("/{id}")

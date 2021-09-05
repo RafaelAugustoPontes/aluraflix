@@ -45,6 +45,11 @@ public class VideoService implements VideoSpec {
             else
                 videoPage = repository.findByDescriptionContainingIgnoreCase(description, page);
 
+            if (videoPage.isEmpty())
+                return GenericResponse.<Page<VideoRespGet>>builder()
+                        .isNotFound(true)
+                        .build();
+
             Page<VideoRespGet> respGetList = videoPage.map(video -> modelMapper.map(video, VideoRespGet.class));
 
 
@@ -56,6 +61,34 @@ public class VideoService implements VideoSpec {
             log.debug("Erro ao buscar os videos");
             e.printStackTrace();
             return GenericResponse.<Page<VideoRespGet>>builder()
+                    .isInternalError(true)
+                    .build();
+        }
+    }
+
+    @Override
+    public GenericResponse<List<VideoRespGet>> findFree() {
+        try {
+            var videos = repository.findAll(Pageable.ofSize(5));
+
+            if (videos.isEmpty())
+                return GenericResponse.<List<VideoRespGet>>builder()
+                        .isNotFound(true)
+                        .build();
+
+            var respGetList = videos.stream()
+                    .map(video -> modelMapper.map(video, VideoRespGet.class))
+                    .collect(Collectors.toList());
+
+            return GenericResponse.<List<VideoRespGet>>builder()
+                    .isOk(true)
+                    .object(respGetList)
+                    .build();
+
+        } catch (Exception e) {
+            log.debug("Erro ao buscar os videos");
+            e.printStackTrace();
+            return GenericResponse.<List<VideoRespGet>>builder()
                     .isInternalError(true)
                     .build();
         }

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @Builder
+@Getter
 public class GenericResponse<T> {
 
     private boolean isInternalError;
@@ -13,7 +14,6 @@ public class GenericResponse<T> {
     private boolean isCreated;
     private boolean isOk;
 
-    @Getter
     private T object;
 
     public ResponseEntity<T> generate() {

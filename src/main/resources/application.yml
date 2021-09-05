@@ -7,9 +7,27 @@ spring:
     url: jdbc:postgresql://localhost:5432/aluraflix
     username: admin
     password: admin
-
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/auth/realms/aluraflix
+          jwk-set-uri: http://localhost:8081/auth/realms/aluraflix/protocol/openid-connect/certs
 ---
 spring:
   profiles: test
   datasource:
     url: jdbc:postgresql://localhost:5432/aluraflix-test
+
+---
+spring:
+  datasource:
+    url: ${POSTGRES_URL}
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${OAUTH2_ISSUER_URI}
+          jwk-set-uri: ${OAUTH2_JWK}

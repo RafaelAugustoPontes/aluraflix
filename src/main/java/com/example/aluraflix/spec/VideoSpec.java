@@ -12,6 +12,8 @@ public interface VideoSpec {
 
     GenericResponse<Page<VideoRespGet>> find(String description, Pageable page);
 
+    GenericResponse<List<VideoRespGet>> findFree();
+
     GenericResponse<VideoRespGet> create(VideoReqPost request);
 
     GenericResponse<VideoRespGet> findById(Integer id);
